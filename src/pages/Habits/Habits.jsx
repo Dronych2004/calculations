@@ -1,7 +1,7 @@
 import React from 'react'
 
 function Habits() {
-  return <div>Habits</div>
+  return <div className="bg-[whitesmoke] text-blue-500">Habits</div>
 }
 
 export default Habits

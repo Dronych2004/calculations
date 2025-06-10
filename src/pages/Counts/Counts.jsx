@@ -1,7 +1,18 @@
 import React from 'react'
+import { useState } from 'react'
+import ButtonAddCount from '../../components/ui/ButtonAddCount'
 
 function Counts() {
-  return <div>Counts</div>
+  const [counts, setCounts] = useState([])
+
+  return (
+    <div className="bg-[whitesmoke] text-blue-500">
+      <h1 className="py-2 mx-auto w-max uppercase font-bold font-serif">
+        Затраты
+      </h1>
+      <ButtonAddCount />
+    </div>
+  )
 }
 
 export default Counts
