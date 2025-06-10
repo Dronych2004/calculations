@@ -3,7 +3,7 @@ import NavMenu from './NavMenu'
 
 function Header() {
   return (
-    <header className="bg-blue-600 text-white p-6 flex flex-col space-y-4">
+    <header className="bg-blue-600 text-white p-3 flex flex-col space-y-2">
       <div className="container mx-auto flex items-center justify-center space-x-4">
         {/* Логотип слева */}
         <img

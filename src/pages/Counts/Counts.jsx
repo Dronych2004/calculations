@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState } from 'react'
 import ButtonAddCount from '../../components/ui/ButtonAddCount'
+import PopupAddCount from '../../components/ui/PopupAddCount'
 
 function Counts() {
   const [counts, setCounts] = useState([])
@@ -11,6 +12,7 @@ function Counts() {
         Затраты
       </h1>
       <ButtonAddCount />
+      <PopupAddCount />
     </div>
   )
 }
