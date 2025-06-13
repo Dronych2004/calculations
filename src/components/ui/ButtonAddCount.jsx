@@ -1,8 +1,9 @@
 import React from 'react'
 
-function ButtonAddCount() {
+function ButtonAddCount({ onClick }) {
   return (
     <button
+      onClick={onClick}
       className="
       text-blue-600 
       bg-white 
