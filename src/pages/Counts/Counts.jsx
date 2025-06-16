@@ -6,6 +6,7 @@ import PopupAddCount from '../../components/ui/CountsComponent/PopupAddCount'
 function Counts() {
   const [counts, setCounts] = useState([])
   const [isPopupOpen, setIsPopupOpen] = useState(false)
+  const [editCount, setEditCount] = useState(null) // объект записи, которую редактируем
 
   // Добавление новой записи
   const handleAddCount = (newCount) => {
@@ -17,10 +18,31 @@ function Counts() {
     setCounts((prev) => prev.filter((count) => count.id !== id))
   }
 
-  // Заглушка под редактирование
+  // Добавление новой записи или обновление существующей
+  const handleAddOrUpdateCount = (count) => {
+    if (editCount) {
+      // Обновление записи по id
+      setCounts((prev) => prev.map((c) => (c.id === count.id ? count : c)))
+    } else {
+      // Добавление новой записи
+      setCounts((prev) => [...prev, count])
+    }
+    setIsPopupOpen(false)
+    setEditCount(null)
+  }
+
+  // Редактирование записи — открыть popup и заполнить поля
   const handleEdit = (id) => {
-    console.log('Редактировать запись с id:', id)
-    // Можно реализовать popup редактирования аналогично добавлению
+    const countToEdit = counts.find((c) => c.id === id)
+    if (!countToEdit) return
+    setEditCount(countToEdit)
+    setIsPopupOpen(true)
+  }
+
+  // Закрытие popup и сброс редактирования
+  const handleClosePopup = () => {
+    setIsPopupOpen(false)
+    setEditCount(null)
   }
 
   return (
@@ -35,8 +57,9 @@ function Counts() {
       {/* Popup для добавления */}
       {isPopupOpen && (
         <PopupAddCount
-          onClose={() => setIsPopupOpen(false)}
-          onSubmit={handleAddCount}
+          onClose={handleClosePopup}
+          onSubmit={handleAddOrUpdateCount}
+          editCount={editCount}
         />
       )}
 

@@ -1,15 +1,34 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import ModalWrapper from '../ModalWrapper'
 import ButtonSend from '../ButtonSend'
 import ButtonCancel from '../ButtonCancel'
 
-function PopupAddCount({ onClose, onSubmit }) {
+function PopupAddCount({ onClose, onSubmit, editCount = null }) {
+  // Если editCount передан — форма заполнится для редактирования
   const [rawAmount, setRawAmount] = useState('')
   const [displayAmount, setDisplayAmount] = useState('')
   const [date, setDate] = useState('')
   const [category, setCategory] = useState('')
   const [comment, setComment] = useState('')
+
+  // При монтировании или смене editCount заполняем поля (редактирование)
+  useEffect(() => {
+    if (editCount) {
+      setRawAmount(editCount.money.toString())
+      setDisplayAmount(Number(editCount.money).toLocaleString('ru-RU'))
+      setDate(editCount.date)
+      setCategory(editCount.category)
+      setComment(editCount.comment || '')
+    } else {
+      // Если не редактируем, очищаем поля
+      setRawAmount('')
+      setDisplayAmount('')
+      setDate('')
+      setCategory('')
+      setComment('')
+    }
+  }, [editCount])
 
   const handleChange = (e) => {
     const rawValue = e.target.value.replace(/\D/g, '')
@@ -28,10 +47,10 @@ function PopupAddCount({ onClose, onSubmit }) {
     const form = e.target.closest('form')
     if (!form) return
     if (!form.checkValidity()) return form.reportValidity()
-    console.log('Отправляем:', Number(rawAmount), date)
 
+    // Если редактируем, сохраняем id, иначе создаём новый
     const newCount = {
-      id: uuidv4(),
+      id: editCount ? editCount.id : uuidv4(), // <--- генерация id
       date,
       category,
       money: Number(rawAmount),
@@ -59,7 +78,7 @@ function PopupAddCount({ onClose, onSubmit }) {
         className="w-[350px] flex flex-col justify-center mx-auto"
       >
         <h1 className="text-center uppercase text-blue-600 font-serif font-bold py-4">
-          Внесение затрат
+          {editCount ? 'Редактирование затраты' : 'Внесение затрат'}
         </h1>
 
         {/* Дата */}
