@@ -78,7 +78,7 @@ function PopupAddCount({ onClose, onSubmit, editCount = null }) {
         className="w-[350px] flex flex-col justify-center mx-auto"
       >
         <h1 className="text-center uppercase text-blue-600 font-serif font-bold py-4">
-          {editCount ? 'Редактирование затраты' : 'Внесение затрат'}
+          {editCount ? 'Редактирование затрат' : 'Внесение затрат'}
         </h1>
 
         {/* Дата */}

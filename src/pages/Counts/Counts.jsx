@@ -45,6 +45,8 @@ function Counts() {
     setEditCount(null)
   }
 
+  const countsSumm = counts.reduce((sum, count) => sum + count.money, 0)
+
   return (
     <div className="bg-[whitesmoke] text-blue-500 min-h-screen py-8">
       <h1 className="text-center text-xl uppercase font-bold font-serif mb-4">
@@ -118,6 +120,14 @@ function Counts() {
             Пока нет ни одной записи
           </p>
         )}
+      </div>
+      <div className="flex justify-center mt-8">
+        <div className="bg-white text-blue-600 px-4 py-2 rounded shadow-sm">
+          <h1 className="text-xl font-bold font-mono tabular-nums">
+            Итого:{' '}
+            {countsSumm.toLocaleString('ru-RU').replace(/\u00A0/g, '\u2009')} ₽
+          </h1>
+        </div>
       </div>
     </div>
   )
