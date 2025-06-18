@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { Pencil, Trash2 } from 'lucide-react'
 import ButtonAddCount from '../../components/ui/CountsComponent/ButtonAddCount'
 import PopupAddCount from '../../components/ui/CountsComponent/PopupAddCount'
+import ButtonDownloadJSON from '../../components/ui/CountsComponent/ButtonDownloadJSON'
+import ButtonUploadJSON from '../../components/ui/CountsComponent/ButtonUploadJSON'
 
 function Counts() {
   const [counts, setCounts] = useState([])
@@ -128,6 +130,10 @@ function Counts() {
             {countsSumm.toLocaleString('ru-RU').replace(/\u00A0/g, '\u2009')} ₽
           </h1>
         </div>
+      </div>
+      <div className="flex flex-row mx-auto justify-center py-4">
+        <ButtonDownloadJSON data={counts} />
+        <ButtonUploadJSON onUpload={setCounts} />
       </div>
     </div>
   )
