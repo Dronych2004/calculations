@@ -9,6 +9,8 @@ function Counts() {
   const [counts, setCounts] = useState([])
   const [isPopupOpen, setIsPopupOpen] = useState(false)
   const [editCount, setEditCount] = useState(null) // объект записи, которую редактируем
+  const [currentPage, setCurrentPage] = useState(1) //состояние текущей страницы (примем нумерацию с 1)
+  const itemsPerPage = 10 //количество строк на странице
 
   // Добавление новой записи
   const handleAddCount = (newCount) => {
@@ -49,6 +51,20 @@ function Counts() {
 
   const countsSumm = counts.reduce((sum, count) => sum + count.money, 0)
 
+  // Индексы текущей страницы
+  const indexOfLastItem = currentPage * itemsPerPage //индекс последнего элемента на текущей странице
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage //индекс первого элемента на текущей странице
+  const currentItems = counts.slice(indexOfFirstItem, indexOfLastItem) // метод массива, который возвращает новый массив от indexOfFirstItem до indexOfLastItem (не включая последний). Данные, отображаемые в таблице на текущей странице
+
+  // Кол-во страниц
+  const totalPages = Math.ceil(counts.length / itemsPerPage)
+  //counts.length — это общее количество записей в массиве, itemsPerPage — сколько записей показывать на одной странице
+
+  // Переключение страниц
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber)
+  }
+
   return (
     <div className="bg-[whitesmoke] text-blue-500 min-h-screen py-8">
       <h1 className="text-center text-xl uppercase font-bold font-serif mb-4">
@@ -81,7 +97,7 @@ function Counts() {
             </tr>
           </thead>
           <tbody>
-            {counts.map((count, index) => (
+            {currentItems.map((count, index) => (
               <tr
                 key={count.id}
                 className="text-blue-600 text-sm font-serif border-t hover:bg-blue-50"
@@ -134,6 +150,21 @@ function Counts() {
       <div className="flex flex-row mx-auto justify-center py-4">
         <ButtonDownloadJSON data={counts} />
         <ButtonUploadJSON onUpload={setCounts} />
+      </div>
+
+      {/* Пагинация */}
+      <div className="flex justify-center mt-4 gap-2">
+        {Array.from({ length: totalPages }, (_, i) => (
+          <button
+            key={i}
+            onClick={() => handlePageChange(i + 1)}
+            className={`px-3 py-1 rounded ${
+              currentPage === i + 1 ? 'bg-blue-500 text-white' : 'bg-gray-200'
+            }`}
+          >
+            {i + 1}
+          </button>
+        ))}
       </div>
     </div>
   )
