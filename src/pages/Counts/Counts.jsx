@@ -4,6 +4,7 @@ import ButtonAddCount from '../../components/ui/CountsComponent/ButtonAddCount'
 import PopupAddCount from '../../components/ui/CountsComponent/PopupAddCount'
 import ButtonDownloadJSON from '../../components/ui/CountsComponent/ButtonDownloadJSON'
 import ButtonUploadJSON from '../../components/ui/CountsComponent/ButtonUploadJSON'
+import Pagination from '../../components/ui/Pagination'
 
 function Counts() {
   const [counts, setCounts] = useState([])
@@ -51,19 +52,14 @@ function Counts() {
 
   const countsSumm = counts.reduce((sum, count) => sum + count.money, 0)
 
-  // Индексы текущей страницы
   const indexOfLastItem = currentPage * itemsPerPage //индекс последнего элемента на текущей странице
   const indexOfFirstItem = indexOfLastItem - itemsPerPage //индекс первого элемента на текущей странице
-  const currentItems = counts.slice(indexOfFirstItem, indexOfLastItem) // метод массива, который возвращает новый массив от indexOfFirstItem до indexOfLastItem (не включая последний). Данные, отображаемые в таблице на текущей странице
+  const currentItems = counts.slice(indexOfFirstItem, indexOfLastItem) // метод массива, который возвращает новый массив от indexOfFirstItem до indexOfLastItem (не включая последний).
+  // Данные, отображаемые в таблице на текущей странице
 
   // Кол-во страниц
   const totalPages = Math.ceil(counts.length / itemsPerPage)
   //counts.length — это общее количество записей в массиве, itemsPerPage — сколько записей показывать на одной странице
-
-  // Переключение страниц
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber)
-  }
 
   return (
     <div className="bg-[whitesmoke] text-blue-500 min-h-screen py-8">
@@ -153,19 +149,13 @@ function Counts() {
       </div>
 
       {/* Пагинация */}
-      <div className="flex justify-center mt-4 gap-2">
-        {Array.from({ length: totalPages }, (_, i) => (
-          <button
-            key={i}
-            onClick={() => handlePageChange(i + 1)}
-            className={`px-3 py-1 rounded ${
-              currentPage === i + 1 ? 'bg-blue-500 text-white' : 'bg-gray-200'
-            }`}
-          >
-            {i + 1}
-          </button>
-        ))}
-      </div>
+      {totalPages > 1 && (
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
+      )}
     </div>
   )
 }
