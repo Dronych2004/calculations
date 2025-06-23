@@ -9,10 +9,10 @@ function Header() {
         <img
           src="/logo.png"
           alt="Логотип"
-          className="h-14 w-14 object-contain  drop-shadow-[0_0_4px_white]"
+          className="h-14 w-14 object-contain  drop-shadow-[0_0_2px_black]"
         />
         {/* Заголовок справа от логотипа */}
-        <h1 className="text-white text-2xl uppercase font-bold  drop-shadow-[0_0_2px_white]">
+        <h1 className="text-white text-2xl uppercase font-bold  drop-shadow-[0_0_2px_black]">
           Трекинг затрат и привычек
         </h1>
       </div>
