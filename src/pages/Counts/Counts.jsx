@@ -5,6 +5,9 @@ import PopupAddCount from '../../components/ui/CountsComponent/PopupAddCount'
 import ButtonDownloadJSON from '../../components/ui/CountsComponent/ButtonDownloadJSON'
 import ButtonUploadJSON from '../../components/ui/CountsComponent/ButtonUploadJSON'
 import Pagination from '../../components/ui/Pagination'
+import FilterPanel from '../../components/ui/CountsComponent/FilterPanel'
+import FilterTable from '../../components/ui/CountsComponent/FilterTable'
+import FilterSummary from '../../components/ui/CountsComponent/FilterSummary'
 
 function Counts() {
   const [counts, setCounts] = useState([])
@@ -12,6 +15,10 @@ function Counts() {
   const [editCount, setEditCount] = useState(null) // объект записи, которую редактируем
   const [currentPage, setCurrentPage] = useState(1) //состояние текущей страницы (примем нумерацию с 1)
   const itemsPerPage = 10 //количество строк на странице
+  // для фильтрации
+  const [startDate, setStartDate] = useState('')
+  const [endDate, setEndDate] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState('')
 
   // Добавление новой записи
   const handleAddCount = (newCount) => {
@@ -60,6 +67,9 @@ function Counts() {
   // Кол-во страниц
   const totalPages = Math.ceil(counts.length / itemsPerPage)
   //counts.length — это общее количество записей в массиве, itemsPerPage — сколько записей показывать на одной странице
+
+  //FilterPanel
+  const applyFilters = (counts, start, end, category) => counts
 
   return (
     <div className="bg-[whitesmoke] text-blue-500 min-h-screen py-8">
@@ -156,6 +166,18 @@ function Counts() {
           onPageChange={setCurrentPage}
         />
       )}
+      <div className="max-w-4xl mx-auto mt-8 overflow-x-auto">
+        <FilterPanel
+          startDate={startDate}
+          endDate={endDate}
+          selectedCategory={selectedCategory}
+          onStartDateChange={setStartDate}
+          onEndDateChange={setEndDate}
+          onCategoryChange={setSelectedCategory}
+        />
+        <FilterTable />
+        <FilterSummary />
+      </div>
     </div>
   )
 }
