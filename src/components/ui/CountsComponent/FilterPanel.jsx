@@ -8,6 +8,8 @@ function FilterPanel({
   onStartDateChange,
   onEndDateChange,
   onCategoryChange,
+  allCounts,
+  onApplyFilters,
 }) {
   // Функция обработки отправки формы
   const handleSubmit = (e) => {
@@ -23,16 +25,24 @@ function FilterPanel({
       return form.reportValidity()
     }
 
-    // Если все поля валидны — здесь можно выполнить логику фильтрации/отправки
-    // Например, вызвать callback, отправить данные, изменить состояние и т.п.
-    // Пока этого нет — просто можно вывести в консоль
-    console.log('Форма валидна, можно применить фильтры')
+    const filtered = allCounts.filter((item) => {
+      const date = new Date(item.date)
+      const validStart = startDate ? date >= new Date(startDate) : true
+      const validEnd = endDate ? date <= new Date(endDate) : true
+      const validCategory = selectedCategory
+        ? item.category === selectedCategory
+        : true
+      return validStart && validEnd && validCategory
+    })
+
+    onApplyFilters(filtered)
   }
+
   return (
     <div className="bg-white p-4 rounded shadow-md mb-4">
       <form
         onSubmit={handleSubmit}
-        className="flex flex-row items-center gap-4 max-w-full mx-auto"
+        className="flex flex-row items-end gap-4 justify-center"
       >
         <div>
           <label className="block text-sm font-medium text-blue-600 mb-1">

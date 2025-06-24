@@ -19,6 +19,8 @@ function Counts() {
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('')
+  const [filteredCounts, setFilteredCounts] = useState([])
+  const [currentFilteredPage, setCurrentFilteredPage] = useState(1)
 
   // Добавление новой записи
   const handleAddCount = (newCount) => {
@@ -69,7 +71,18 @@ function Counts() {
   //counts.length — это общее количество записей в массиве, itemsPerPage — сколько записей показывать на одной странице
 
   //FilterPanel
-  const applyFilters = (counts, start, end, category) => counts
+
+  const filteredCountsSumm = filteredCounts.reduce(
+    (sum, count) => sum + count.money,
+    0
+  )
+  //страницы отфильтрованной таблицы
+  const filteredIndexOfLast = currentFilteredPage * itemsPerPage
+  const filteredIndexOfFirst = filteredIndexOfLast - itemsPerPage
+  const currentFilteredItems = filteredCounts.slice(
+    filteredIndexOfFirst,
+    filteredIndexOfLast
+  )
 
   return (
     <div className="bg-[whitesmoke] text-blue-500 min-h-screen py-8">
@@ -174,9 +187,22 @@ function Counts() {
           onStartDateChange={setStartDate}
           onEndDateChange={setEndDate}
           onCategoryChange={setSelectedCategory}
+          allCounts={counts}
+          onApplyFilters={(filtered) => {
+            setFilteredCounts(filtered)
+            setCurrentFilteredPage(1)
+          }}
         />
-        <FilterTable />
-        <FilterSummary />
+        {/* отображаем отфильтрованную таблицу */}
+        {filteredCounts.length > 0 && (
+          <FilterTable
+            data={currentFilteredItems}
+            currentPage={currentFilteredPage}
+            totalPages={Math.ceil(filteredCounts.length / itemsPerPage)}
+            onPageChange={setCurrentFilteredPage}
+          />
+        )}
+        <FilterSummary filteredCountsSumm={filteredCountsSumm} />
       </div>
     </div>
   )
