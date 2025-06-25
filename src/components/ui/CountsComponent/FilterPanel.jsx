@@ -86,7 +86,7 @@ function FilterPanel({
             className="border border-blue-300 rounded px-2 py-1 h-10"
           >
             <option value="" disabled hidden>
-              Категория...
+              Выберите категорию...
             </option>
             <option value="products">Продукты</option>
             <option value="travels">Путешествия</option>

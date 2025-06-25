@@ -107,7 +107,7 @@ function PopupAddCount({ onClose, onSubmit, editCount = null }) {
             required
           >
             <option value="" disabled hidden>
-              Категория...
+              Выберите категорию...
             </option>
             <option value="products">Продукты</option>
             <option value="travels">Путешествия</option>
