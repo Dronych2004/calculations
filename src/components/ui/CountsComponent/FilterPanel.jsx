@@ -1,5 +1,6 @@
 import React from 'react'
 import ButtonSend from '../ButtonSend'
+import ButtonReset from '../ButtonReset'
 
 function FilterPanel({
   startDate,
@@ -10,6 +11,7 @@ function FilterPanel({
   onCategoryChange,
   allCounts,
   onApplyFilters,
+  onResetFilters,
 }) {
   // Функция обработки отправки формы
   const handleSubmit = (e) => {
@@ -97,6 +99,12 @@ function FilterPanel({
             &nbsp;
           </label>
           <ButtonSend />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-transparent mb-1">
+            &nbsp;
+          </label>
+          <ButtonReset onResetFilters={onResetFilters} />
         </div>
       </form>
     </div>

@@ -19,7 +19,7 @@ function Counts() {
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('')
-  const [filteredCounts, setFilteredCounts] = useState([])
+  const [filteredCounts, setFilteredCounts] = useState(null)
   const [currentFilteredPage, setCurrentFilteredPage] = useState(1)
 
   // Добавление новой записи
@@ -72,17 +72,26 @@ function Counts() {
 
   //FilterPanel
 
-  const filteredCountsSumm = filteredCounts.reduce(
-    (sum, count) => sum + count.money,
-    0
-  )
+  const filteredCountsSumm = Array.isArray(filteredCounts)
+    ? filteredCounts.reduce((sum, count) => sum + count.money, 0)
+    : 0
+
   //страницы отфильтрованной таблицы
   const filteredIndexOfLast = currentFilteredPage * itemsPerPage
   const filteredIndexOfFirst = filteredIndexOfLast - itemsPerPage
-  const currentFilteredItems = filteredCounts.slice(
-    filteredIndexOfFirst,
-    filteredIndexOfLast
-  )
+  const currentFilteredItems = Array.isArray(filteredCounts)
+    ? filteredCounts.slice(filteredIndexOfFirst, filteredIndexOfLast)
+    : []
+
+  //сброс фильтров
+  const handleResetFilters = (e) => {
+    if (e) e.preventDefault() // чтобы форма не отправлялась при клике, если событие есть
+    setStartDate('')
+    setEndDate('')
+    setSelectedCategory('')
+    setFilteredCounts(null) // возвращаем исходные данные
+    setCurrentFilteredPage(1)
+  }
 
   return (
     <div className="bg-[whitesmoke] text-blue-500 min-h-screen py-8">
@@ -192,9 +201,10 @@ function Counts() {
             setFilteredCounts(filtered)
             setCurrentFilteredPage(1)
           }}
+          onResetFilters={handleResetFilters}
         />
         {/* отображаем отфильтрованную таблицу */}
-        {filteredCounts.length > 0 && (
+        {filteredCounts !== null && (
           <FilterTable
             data={currentFilteredItems}
             currentPage={currentFilteredPage}
