@@ -21,6 +21,7 @@ function Counts() {
   const [selectedCategory, setSelectedCategory] = useState('')
   const [filteredCounts, setFilteredCounts] = useState(null)
   const [currentFilteredPage, setCurrentFilteredPage] = useState(1)
+  const [sortDirection, setSortDirection] = useState('asc') // или "desc"
 
   // Добавление новой записи
   const handleAddCount = (newCount) => {
@@ -59,11 +60,20 @@ function Counts() {
     setEditCount(null)
   }
 
+  //сортировка по дате
+
+  const sortedCounts = [...counts].sort((a, b) => {
+    const dateA = new Date(a.date)
+    const dateB = new Date(b.date)
+
+    return sortDirection === 'asc' ? dateA - dateB : dateB - dateA
+  })
+
   const countsSumm = counts.reduce((sum, count) => sum + count.money, 0)
 
   const indexOfLastItem = currentPage * itemsPerPage //индекс последнего элемента на текущей странице
   const indexOfFirstItem = indexOfLastItem - itemsPerPage //индекс первого элемента на текущей странице
-  const currentItems = counts.slice(indexOfFirstItem, indexOfLastItem) // метод массива, который возвращает новый массив от indexOfFirstItem до indexOfLastItem (не включая последний).
+  const currentItems = sortedCounts.slice(indexOfFirstItem, indexOfLastItem) // метод массива, который возвращает новый массив от indexOfFirstItem до indexOfLastItem (не включая последний).
   // Данные, отображаемые в таблице на текущей странице
 
   // Кол-во страниц
@@ -117,7 +127,16 @@ function Counts() {
           <thead>
             <tr className="bg-blue-100 text-blue-600 text-left text-sm font-bold font-serif">
               <th className="px-4 py-2 border-r">№</th>
-              <th className="px-4 py-2 border-r">Дата</th>
+              {/* <th className="px-4 py-2 border-r">Дата</th> */}
+              <th
+                className="px-4 py-2 border-r cursor-pointer"
+                onClick={() =>
+                  setSortDirection((prev) => (prev === 'asc' ? 'desc' : 'asc'))
+                }
+              >
+                Дата {sortDirection === 'asc' ? '↑' : '↓'}
+              </th>
+
               <th className="px-4 py-2 border-r">Категория</th>
               <th className="px-4 py-2 border-r">Сумма</th>
               <th className="px-4 py-2 border-r">Комментарий</th>
@@ -130,7 +149,9 @@ function Counts() {
                 key={count.id}
                 className="text-blue-600 text-sm font-serif border-t hover:bg-blue-50"
               >
-                <td className="px-4 py-2 border-r text-center">{index + 1}</td>
+                <td className="px-4 py-2 border-r text-center">
+                  {indexOfFirstItem + index + 1}
+                </td>
                 <td className="px-4 py-2 border-r">{count.date}</td>
                 <td className="px-4 py-2 border-r">{count.category}</td>
                 <td className="px-4 py-2 border-r text-right">
