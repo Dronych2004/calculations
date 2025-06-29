@@ -8,6 +8,7 @@ import Pagination from '../../components/ui/Pagination'
 import FilterPanel from '../../components/ui/CountsComponent/FilterPanel'
 import FilterTable from '../../components/ui/CountsComponent/FilterTable'
 import FilterSummary from '../../components/ui/CountsComponent/FilterSummary'
+import SearchComponent from '../../components/ui/CountsComponent/SearchComponent'
 
 function Counts() {
   const [counts, setCounts] = useState([])
@@ -22,6 +23,10 @@ function Counts() {
   const [filteredCounts, setFilteredCounts] = useState(null)
   const [currentFilteredPage, setCurrentFilteredPage] = useState(1)
   const [sortDirection, setSortDirection] = useState('asc') // или "desc"
+
+  //строка поиска
+  const [searchQuery, setSearchQuery] = useState('')
+  const [filteredSearchQuery, setFilteredSearchQuery] = useState('')
 
   // Добавление новой записи
   const handleAddCount = (newCount) => {
@@ -60,6 +65,13 @@ function Counts() {
     setEditCount(null)
   }
 
+  //строка поиска по комментарию
+
+  const handleSearch = (e) => {
+    if (e) e.preventDefault()
+    setCurrentPage(1) // сбрасываем страницу
+  }
+
   //сортировка по дате
 
   const sortedCounts = [...counts].sort((a, b) => {
@@ -71,13 +83,18 @@ function Counts() {
 
   const countsSumm = counts.reduce((sum, count) => sum + count.money, 0)
 
+  //фильтрация по поиску
+  const searchedCounts = sortedCounts.filter((c) =>
+    c.comment?.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+
   const indexOfLastItem = currentPage * itemsPerPage //индекс последнего элемента на текущей странице
   const indexOfFirstItem = indexOfLastItem - itemsPerPage //индекс первого элемента на текущей странице
-  const currentItems = sortedCounts.slice(indexOfFirstItem, indexOfLastItem) // метод массива, который возвращает новый массив от indexOfFirstItem до indexOfLastItem (не включая последний).
+  const currentItems = searchedCounts.slice(indexOfFirstItem, indexOfLastItem) // метод массива, который возвращает новый массив от indexOfFirstItem до indexOfLastItem (не включая последний).
   // Данные, отображаемые в таблице на текущей странице
 
   // Кол-во страниц
-  const totalPages = Math.ceil(counts.length / itemsPerPage)
+  const totalPages = Math.ceil(searchedCounts.length / itemsPerPage)
   //counts.length — это общее количество записей в массиве, itemsPerPage — сколько записей показывать на одной странице
 
   //FilterPanel
@@ -103,6 +120,13 @@ function Counts() {
     setCurrentFilteredPage(1)
   }
 
+  //сброс фильтра в строке поиска
+  const handleReset = (e) => {
+    if (e) e.preventDefault() // чтобы форма не отправлялась при клике, если событие есть
+    setSearchQuery('')
+    setCurrentPage(1)
+  }
+
   return (
     <div className="bg-[whitesmoke] text-blue-500 min-h-screen py-8">
       <h1 className="text-center text-xl uppercase font-bold font-serif mb-4">
@@ -120,6 +144,13 @@ function Counts() {
           editCount={editCount}
         />
       )}
+      {/* Строка поиска */}
+      <SearchComponent
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        onFind={handleSearch}
+        onClick={handleReset}
+      />
 
       {/* Таблица затрат */}
       <div className="max-w-4xl mx-auto mt-8 overflow-x-auto">
@@ -144,7 +175,12 @@ function Counts() {
             </tr>
           </thead>
           <tbody>
-            {currentItems.map((count, index) => (
+            {(filteredCounts
+              ? currentFilteredItems
+              : currentItems.filter((c) =>
+                  c.comment?.toLowerCase().includes(searchQuery.toLowerCase())
+                )
+            ).map((count, index) => (
               <tr
                 key={count.id}
                 className="text-blue-600 text-sm font-serif border-t hover:bg-blue-50"
@@ -182,7 +218,7 @@ function Counts() {
         </table>
 
         {/* Сообщение, если записей нет */}
-        {counts.length === 0 && (
+        {(filteredCounts ? filteredCounts.length : counts.length) === 0 && (
           <p className="text-center text-sm text-blue-400 font-serif mt-6">
             Пока нет ни одной записи
           </p>

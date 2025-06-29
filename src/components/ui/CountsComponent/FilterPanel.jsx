@@ -1,6 +1,7 @@
 import React from 'react'
 import ButtonSend from '../ButtonSend'
 import ButtonReset from '../ButtonReset'
+import SearchFilteredComponent from './SearchFilteredComponent'
 
 function FilterPanel({
   startDate,
@@ -104,8 +105,9 @@ function FilterPanel({
           <label className="block text-sm font-medium text-transparent mb-1">
             &nbsp;
           </label>
-          <ButtonReset onResetFilters={onResetFilters} />
+          <ButtonReset onClick={onResetFilters}>Сброс</ButtonReset>
         </div>
+        <SearchFilteredComponent />
       </form>
     </div>
   )
