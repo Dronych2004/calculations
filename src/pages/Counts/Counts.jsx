@@ -149,7 +149,7 @@ function Counts() {
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         onFind={handleSearch}
-        onClick={handleReset}
+        onReset={handleReset}
       />
 
       {/* Таблица затрат */}

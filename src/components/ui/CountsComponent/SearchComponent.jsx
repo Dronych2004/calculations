@@ -2,7 +2,7 @@ import React from 'react'
 import ButtonFind from '../ButtonFind'
 import ButtonReset from '../ButtonReset'
 
-function SearchComponent({ searchQuery, setSearchQuery, onFind, onClick }) {
+function SearchComponent({ searchQuery, setSearchQuery, onFind, onReset }) {
   return (
     <div className="flex flex-row justify-center gap-2 py-4">
       <input
@@ -13,7 +13,7 @@ function SearchComponent({ searchQuery, setSearchQuery, onFind, onClick }) {
         className="border border-blue-300 rounded px-2 py-1"
       />
       <ButtonFind onClick={onFind} />
-      <ButtonReset onClick={onClick}>Сброс поиска</ButtonReset>
+      <ButtonReset onClick={onReset}>Сброс поиска</ButtonReset>
     </div>
   )
 }
