@@ -8,7 +8,7 @@ import Pagination from '../../components/ui/Pagination'
 import FilterPanel from '../../components/ui/CountsComponent/FilterPanel'
 import FilterTable from '../../components/ui/CountsComponent/FilterTable'
 import FilterSummary from '../../components/ui/CountsComponent/FilterSummary'
-import SearchComponent from '../../components/ui/CountsComponent/SearchComponent'
+import SearchOfComment from '../../components/ui/CountsComponent/SearchOfComment'
 
 function Counts() {
   const [counts, setCounts] = useState([])
@@ -145,7 +145,7 @@ function Counts() {
         />
       )}
       {/* Строка поиска */}
-      <SearchComponent
+      <SearchOfComment
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         onFind={handleSearch}
@@ -246,7 +246,7 @@ function Counts() {
         />
       )}
       <div className="max-w-4xl mx-auto mt-8 overflow-x-auto">
-        <FilterPanel
+        {/* <FilterPanel
           startDate={startDate}
           endDate={endDate}
           selectedCategory={selectedCategory}
@@ -259,17 +259,17 @@ function Counts() {
             setCurrentFilteredPage(1)
           }}
           onResetFilters={handleResetFilters}
-        />
+        /> */}
         {/* отображаем отфильтрованную таблицу */}
-        {filteredCounts !== null && (
+        {/* {filteredCounts !== null && (
           <FilterTable
             data={currentFilteredItems}
             currentPage={currentFilteredPage}
             totalPages={Math.ceil(filteredCounts.length / itemsPerPage)}
             onPageChange={setCurrentFilteredPage}
           />
-        )}
-        <FilterSummary filteredCountsSumm={filteredCountsSumm} />
+        )} */}
+        {/* <FilterSummary filteredCountsSumm={filteredCountsSumm} /> */}
       </div>
     </div>
   )

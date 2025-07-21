@@ -42,7 +42,7 @@ function FilterPanel({
   }
 
   return (
-    <div className="bg-white p-4 rounded shadow-md mb-4">
+    <div className="bg-white flex flex-col p-4 rounded shadow-md mb-4">
       <form
         onSubmit={handleSubmit}
         className="flex flex-row items-end gap-4 justify-center"
@@ -107,8 +107,8 @@ function FilterPanel({
           </label>
           <ButtonReset onClick={onResetFilters}>Сброс</ButtonReset>
         </div>
-        <SearchFilteredComponent />
       </form>
+      <SearchFilteredComponent />
     </div>
   )
 }
