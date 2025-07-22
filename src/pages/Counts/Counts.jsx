@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Pencil, Trash2 } from 'lucide-react'
 import ButtonAddCount from '../../components/ui/CountsComponent/ButtonAddCount'
 import PopupAddCount from '../../components/ui/CountsComponent/PopupAddCount'
@@ -12,23 +12,29 @@ function Counts() {
   // Основной массив всех записей
   const [counts, setCounts] = useState([])
 
-  // Контроль видимости popup для добавления/редактирования
+  // Popup: открыто/закрыто, и редактируемая запись
   const [isPopupOpen, setIsPopupOpen] = useState(false)
-  const [editCount, setEditCount] = useState(null) // текущая запись для редактирования
+  const [editCount, setEditCount] = useState(null)
 
   // Пагинация
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 10
 
-  // Фильтры даты и категории
+  // Фильтры: даты, категория, комментарий (поисковая строка)
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('')
-
-  // Поисковая строка по комментариям
   const [searchQuery, setSearchQuery] = useState('')
 
-  // Добавление или обновление записи
+  // Отфильтрованные записи — состояние, чтобы отрисовывать только после кнопки
+  const [filteredCounts, setFilteredCounts] = useState([])
+
+  // При первом рендере и когда counts меняется, обновляем filteredCounts
+  useEffect(() => {
+    setFilteredCounts(counts)
+  }, [counts])
+
+  // Добавить или обновить запись
   const handleAddOrUpdateCount = (count) => {
     if (editCount) {
       setCounts((prev) => prev.map((c) => (c.id === count.id ? count : c)))
@@ -39,7 +45,7 @@ function Counts() {
     setEditCount(null)
   }
 
-  // Открытие формы редактирования записи
+  // Открыть popup для редактирования
   const handleEdit = (id) => {
     const countToEdit = counts.find((c) => c.id === id)
     if (countToEdit) {
@@ -48,51 +54,54 @@ function Counts() {
     }
   }
 
-  // Удаление записи
+  // Удалить запись
   const handleDelete = (id) => {
     setCounts((prev) => prev.filter((c) => c.id !== id))
   }
 
-  // Закрытие popup без сохранения
+  // Закрыть popup без сохранения
   const handleClosePopup = () => {
     setIsPopupOpen(false)
     setEditCount(null)
   }
 
-  // Сброс поиска по комментарию — очищаем строку и сбрасываем страницу
-  const handleResetSearch = (e) => {
-    e.preventDefault()
-    setSearchQuery('')
-    setCurrentPage(1)
-  }
-
-  // Сброс фильтров даты и категории — очищаем и сбрасываем страницу
-  const handleResetFilters = (e) => {
-    e.preventDefault()
-    setStartDate('')
-    setEndDate('')
-    setSelectedCategory('')
-    setCurrentPage(1)
-  }
-
-  // Объединённая фильтрация по дате, категории и комментарию
-  const applyCombinedFilters = () => {
-    return counts
+  // Применить фильтры — запускается по кнопке "Применить" и "Найти"
+  const handleApplyFilters = (query = searchQuery) => {
+    const filtered = counts
       .filter((item) => {
         const date = new Date(item.date)
         const validStart = startDate ? date >= new Date(startDate) : true
         const validEnd = endDate ? date <= new Date(endDate) : true
         return validStart && validEnd
       })
-      .filter((item) => {
-        return selectedCategory ? item.category === selectedCategory : true
-      })
-      .filter((item) => {
-        return item.comment?.toLowerCase().includes(searchQuery.toLowerCase())
-      })
+      .filter((item) =>
+        selectedCategory ? item.category === selectedCategory : true
+      )
+      .filter((item) =>
+        item.comment?.toLowerCase().includes((query || '').toLowerCase())
+      )
+    console.log('Отфильтровано записей:', filtered.length)
+    setFilteredCounts(filtered)
+    setCurrentPage(1)
+    setSearchQuery(query || '')
   }
 
-  const filteredCounts = applyCombinedFilters()
+  // Сброс поиска по комментарию
+  const handleResetSearch = () => {
+    setSearchQuery('')
+    handleApplyFilters('') // запускаем фильтрацию с пустой строкой
+    setCurrentPage(1)
+  }
+
+  // Сброс фильтров даты и категории
+  const handleResetFilters = (e) => {
+    e.preventDefault()
+    setStartDate('')
+    setEndDate('')
+    setSelectedCategory('')
+    setFilteredCounts(counts)
+    setCurrentPage(1)
+  }
 
   // Пагинация: определяем текущие элементы для отображения
   const indexOfLastItem = currentPage * itemsPerPage
@@ -132,6 +141,7 @@ function Counts() {
           onEndDateChange={setEndDate}
           onCategoryChange={setSelectedCategory}
           onResetFilters={handleResetFilters}
+          onApplyFilters={handleApplyFilters} // передаём для кнопки "Применить"
         />
       </div>
 
@@ -139,8 +149,7 @@ function Counts() {
       <div className="bg-white shadow-md mb-2 max-w-4xl mx-auto mt-2 overflow-x-auto">
         <SearchOfComment
           searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          onFind={() => setCurrentPage(1)}
+          onFind={handleApplyFilters} // handleApplyFilters теперь принимает query
           onReset={handleResetSearch}
         />
       </div>
