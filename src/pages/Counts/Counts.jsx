@@ -176,7 +176,9 @@ function Counts() {
                 <td className="px-4 py-2 border-r text-center">
                   {indexOfFirstItem + idx + 1}
                 </td>
-                <td className="px-4 py-2 border-r">{count.date}</td>
+                <td className="px-4 py-2 border-r">
+                  {new Date(count.date).toLocaleDateString('ru-RU')}
+                </td>
                 <td className="px-4 py-2 border-r">{count.category}</td>
                 <td className="px-4 py-2 border-r text-right">
                   {count.money.toLocaleString('ru-RU')} ₽
