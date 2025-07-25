@@ -68,3 +68,12 @@ function TableHabit({ habits, year, month }) {
 }
 
 export default TableHabit
+
+import React from 'react'
+
+function TableHabit() {
+  // habits, progress, setProgress, month, year
+  return <div>TableHabit</div>
+}
+
+export default TableHabit

@@ -1,4 +1,7 @@
 import React from 'react'
+import { useState } from 'react'
+import MonthYearControl from '../../components/ui/HabitsComponent/MonthYearControl'
+import AddHabit from '../../components/ui/HabitsComponent/AddHabit'
 
 function Habits() {
   const [year, setYear] = useState(new Date().getFullYear())
