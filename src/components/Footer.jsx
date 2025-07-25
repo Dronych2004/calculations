@@ -4,7 +4,9 @@ function Footer() {
   return (
     <footer className="bg-blue-600 text-white h-[120px] flex flex-col items-center justify-center p-6">
       <div className="container mx-auto text-center">
-        <p className="mb-4">© {new Date().getFullYear()} Расчеты</p>
+        <p className="mb-4">
+          © {new Date().getFullYear()} Трекинг затрат и привычек
+        </p>
         <div className="flex justify-center space-x-4">
           <a
             href="#"
