@@ -16,7 +16,7 @@ function Habits() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4">
+    <div className="w-full mx-auto px-8">
       <MonthYearControl
         year={year}
         setYear={setYear}
