@@ -6,8 +6,9 @@ const getDaysInMonth = (year, month) => {
   return Array.from({ length: date.getDate() }, (_, i) => i + 1)
 }
 
-function TableHabit({ habits, year, month }) {
+function TableHabit({ habits, year, month, onEditHabit, onDeleteHabit }) {
   const daysInMonth = getDaysInMonth(year, month)
+
   return (
     <div className="overflow-x-auto">
       <table className="w-full border-collapse">
@@ -37,14 +38,14 @@ function TableHabit({ habits, year, month }) {
               </td>
               <td className="border-white border-2 px-2 py-1 text-red-600">
                 <button
-                  onClick={() => handleEdit(count.id)}
+                  onClick={() => onEditHabit(habit.id)}
                   className="text-blue-500 hover:text-yellow-500 transition ml-2"
                   title="Редактировать"
                 >
                   <Pencil size={18} />
                 </button>
                 <button
-                  onClick={() => handleDelete(count.id)}
+                  onClick={() => onDeleteHabit(habit.id)}
                   className="text-blue-500 hover:text-red-500 transition ml-4"
                   title="Удалить"
                 >
