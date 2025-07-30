@@ -1,52 +1,27 @@
 import React from 'react'
 import ButtonSend from '../ButtonSend'
 import ButtonReset from '../ButtonReset'
-import SearchFilteredComponent from './SearchFilteredComponent'
 
-function FilterPanel({
+function SearchOfDateAndCategory({
   startDate,
   endDate,
   selectedCategory,
   onStartDateChange,
   onEndDateChange,
   onCategoryChange,
-  allCounts,
-  onApplyFilters,
+  onApplyFilters, // добавлен пропс для кнопки "Применить"
   onResetFilters,
 }) {
-  // Функция обработки отправки формы
-  const handleSubmit = (e) => {
-    e.preventDefault() // Отменяем стандартное поведение — чтобы форма не перезагружала страницу
-
-    // Находим ближайший родительский элемент <form> от кнопки/события
-    const form = e.target.closest('form')
-    if (!form) return // Если форма не найдена — ничего не делаем
-
-    // Проверяем валидность всей формы (с учётом required, min, max и др.)
-    if (!form.checkValidity()) {
-      // Если есть ошибки — показываем встроенные браузерные сообщения с подсказками
-      return form.reportValidity()
-    }
-
-    const filtered = allCounts.filter((item) => {
-      const date = new Date(item.date)
-      const validStart = startDate ? date >= new Date(startDate) : true
-      const validEnd = endDate ? date <= new Date(endDate) : true
-      const validCategory = selectedCategory
-        ? item.category === selectedCategory
-        : true
-      return validStart && validEnd && validCategory
-    })
-
-    onApplyFilters(filtered)
-  }
-
   return (
-    <div className="bg-white p-4 rounded shadow-md mb-4">
+    <div className="bg-white flex flex-col p-4 rounded shadow-md mb-4">
       <form
-        onSubmit={handleSubmit}
+        onSubmit={(e) => {
+          e.preventDefault()
+          onApplyFilters()
+        }}
         className="flex flex-row items-end gap-4 justify-center"
       >
+        {/* Поле "От" (начало периода) */}
         <div>
           <label className="block text-sm font-medium text-blue-600 mb-1">
             От
@@ -54,7 +29,6 @@ function FilterPanel({
           <input
             type="date"
             value={startDate}
-            required
             min="2025-01-01"
             max="2030-12-31"
             onChange={(e) => onStartDateChange(e.target.value)}
@@ -62,6 +36,7 @@ function FilterPanel({
           />
         </div>
 
+        {/* Поле "До" (конец периода) */}
         <div>
           <label className="block text-sm font-medium text-blue-600 mb-1">
             До
@@ -69,7 +44,6 @@ function FilterPanel({
           <input
             type="date"
             value={endDate}
-            required
             min="2025-01-01"
             max="2030-12-31"
             onChange={(e) => onEndDateChange(e.target.value)}
@@ -77,6 +51,7 @@ function FilterPanel({
           />
         </div>
 
+        {/* Выпадающий список категорий */}
         <div>
           <label className="block text-sm font-medium text-blue-600 mb-1">
             Категория
@@ -95,22 +70,25 @@ function FilterPanel({
           </select>
         </div>
 
+        {/* Кнопка "Применить" — она просто визуальная, фильтрация происходит при изменении */}
         <div>
           <label className="block text-sm font-medium text-transparent mb-1">
             &nbsp;
           </label>
-          <ButtonSend />
+          {/* Кнопка submit отправляет форму и вызывает onApplyFilters */}
+          <ButtonSend type="submit" />
         </div>
+
+        {/* Кнопка сброса фильтров */}
         <div>
           <label className="block text-sm font-medium text-transparent mb-1">
             &nbsp;
           </label>
           <ButtonReset onClick={onResetFilters}>Сброс</ButtonReset>
         </div>
-        <SearchFilteredComponent />
       </form>
     </div>
   )
 }
 
-export default FilterPanel
+export default SearchOfDateAndCategory
