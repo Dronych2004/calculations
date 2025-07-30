@@ -1,58 +1,57 @@
-import React, { useState } from 'react'
-import ConfirmDialog from './ConfirmDialog'
+import React, { useState, useEffect } from 'react'
 
-function AddHabit({ onAdd }) {
+function AddHabit({ onAdd, onEdit, editHabit, setEditHabit }) {
   const [habitName, setHabitName] = useState('')
-  const [showConfirm, setShowConfirm] = useState(false)
+
+  // Если выбран editHabit — подставляем его в input
+  useEffect(() => {
+    if (editHabit) {
+      setHabitName(editHabit.title)
+    }
+  }, [editHabit])
 
   const handleSubmit = (e) => {
     e.preventDefault()
     if (!habitName.trim()) return
-    setShowConfirm(true)
-  }
 
-  const confirmAdd = () => {
-    onAdd(habitName.trim())
-    setHabitName('')
-    setShowConfirm(false)
-  }
+    if (editHabit) {
+      onEdit(habitName) // Обновляем привычку
+      setEditHabit(null) // Закрываем режим редактирования
+    } else {
+      onAdd(habitName) // Добавляем новую привычку
+    }
 
-  const cancelAdd = () => {
-    setShowConfirm(false)
+    setHabitName('') // Очищаем поле
   }
 
   return (
-    <>
-      <form
-        onSubmit={handleSubmit}
-        className="flex justify-center space-x-4 mb-4"
-      >
-        <input
-          type="text"
-          value={habitName}
-          onChange={(e) => setHabitName(e.target.value)}
-          placeholder="Новая привычка"
-          className="px-3 py-1 border rounded w-64 text-black"
-        />
-        <button
-          type="submit"
-          className="px-4 py-1 bg-green-600 text-white rounded hover:bg-green-700"
-        >
-          Добавить
-        </button>
-      </form>
-
-      <ConfirmDialog
-        isOpen={showConfirm}
-        onConfirm={confirmAdd}
-        onCancel={cancelAdd}
-        message={
-          <p className="text-black">
-            Добавить привычку: <b>{habitName.trim()}</b>?
-          </p>
-        }
+    <form onSubmit={handleSubmit} className="mb-4 flex gap-2">
+      <input
+        type="text"
+        value={habitName}
+        onChange={(e) => setHabitName(e.target.value)}
+        placeholder={editHabit ? 'Изменить привычку на...' : 'Новая привычка'}
+        className="px-3 py-1 border rounded w-64 text-black"
       />
-    </>
+      <button
+        type="submit"
+        className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600"
+      >
+        {editHabit ? 'Сохранить' : 'Добавить'}
+      </button>
+      {editHabit && (
+        <button
+          type="button"
+          onClick={() => {
+            setEditHabit(null)
+            setHabitName('')
+          }}
+          className="bg-gray-400 text-white px-4 py-1 rounded hover:bg-gray-500"
+        >
+          Отмена
+        </button>
+      )}
+    </form>
   )
 }
 

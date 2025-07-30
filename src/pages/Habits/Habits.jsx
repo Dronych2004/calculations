@@ -39,6 +39,14 @@ function Habits() {
     setIsConfirmDialogIsOpen(false)
   }
 
+  const updateHabit = (newTitle) => {
+    if (!editHabit) return
+    setHabits((prev) =>
+      prev.map((h) => (h.id === editHabit.id ? { ...h, title: newTitle } : h))
+    )
+    setEditHabit(null)
+  }
+
   return (
     <div className="w-full mx-auto px-8">
       <MonthYearControl
@@ -53,7 +61,9 @@ function Habits() {
         onAdd={addHabit}
         editHabit={editHabit}
         setEditHabit={setEditHabit}
+        onEdit={updateHabit}
       />
+
       <TableHabit
         habits={habits}
         year={year}
