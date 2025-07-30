@@ -1,8 +1,6 @@
 import React from 'react'
 import { useState } from 'react'
 import MonthYearControl from '../../components/ui/HabitsComponent/MonthYearControl'
-
-import AddHabit from '../../components/ui/HabitsComponent/AddHabit'
 import TableHabit from '../../components/ui/HabitsComponent/TableHabit'
 import AddHabit from '../../components/ui/HabitsComponent/AddHabit'
 import { v4 as uuidv4 } from 'uuid'
