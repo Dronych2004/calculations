@@ -5,6 +5,8 @@ import TableHabit from '../../components/ui/HabitsComponent/TableHabit'
 import AddHabit from '../../components/ui/HabitsComponent/AddHabit'
 import { v4 as uuidv4 } from 'uuid'
 import ConfirmDialog from '../../components/ui/HabitsComponent/ConfirmDialog'
+import ButtonDownloadHabbitsJSON from '../../components/ui/HabitsComponent/ButtonDownloadHabbitsJSON'
+import ButtonUploadHabbitsJSON from '../../components/ui/HabitsComponent/ButtonUploadHabbitsJSON'
 
 function Habits() {
   const [year, setYear] = useState(new Date().getFullYear())
@@ -17,7 +19,12 @@ function Habits() {
   const [habitToDelete, setHabitToDelete] = useState(null)
 
   const addHabit = (title) => {
-    const newHabit = { id: uuidv4(), title }
+    const days = new Date(year, month + 1, 0).getDate() // сколько дней в текущем месяце
+    const newHabit = {
+      id: uuidv4(),
+      title,
+      checks: Array(days).fill(false), // массив на количество дней месяца
+    }
     setHabits((prev) => [...prev, newHabit])
   }
 
@@ -35,6 +42,7 @@ function Habits() {
   }
 
   const handleConfirmDeleteHabit = () => {
+    if (!habitToDelete) return
     setHabits((prev) => prev.filter((h) => h.id !== habitToDelete.id))
     setHabitToDelete(null)
     setIsConfirmDialogIsOpen(false)
@@ -46,6 +54,23 @@ function Habits() {
       prev.map((h) => (h.id === editHabit.id ? { ...h, title: newTitle } : h))
     )
     setEditHabit(null)
+  }
+
+  // функция для клика по чекбоксу
+  const toggleCheck = (habitId, dayIndex) => {
+    const daysInMonth = new Date(year, month + 1, 0).getDate() // кол-во дней месяца
+    setHabits((prev) =>
+      prev.map((h) => {
+        if (h.id === habitId) {
+          const newChecks = [...h.checks]
+          // если массив короче, добавляем пустые значения
+          while (newChecks.length < daysInMonth) newChecks.push(false)
+          newChecks[dayIndex] = !newChecks[dayIndex] // меняем значение чекбокса
+          return { ...h, checks: newChecks }
+        }
+        return h
+      })
+    )
   }
 
   return (
@@ -71,6 +96,7 @@ function Habits() {
         month={month}
         onEditHabit={handleEditHabit}
         onDeleteHabit={handleDeleteHabit}
+        toggleCheck={toggleCheck} // передаем в таблицу
       />
       <ConfirmDialog
         isOpen={isConfirmDialogIsOpen}
@@ -82,6 +108,12 @@ function Habits() {
           </p>
         }
       />
+
+      {/* Кнопки скачивания и загрузки JSON */}
+      <div className="flex flex-row mx-auto justify-center py-4 space-x-4">
+        <ButtonDownloadHabbitsJSON data={habits} />
+        <ButtonUploadHabbitsJSON onUpload={setHabits} />
+      </div>
     </div>
   )
 }
