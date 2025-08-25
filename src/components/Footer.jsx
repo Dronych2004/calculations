@@ -6,7 +6,7 @@ import TermsOfUseModal from '../components/ui/TermsOfUseModal'
 function Footer() {
   const [isPolicyOpen, setIsPolicyOpen] = useState(false) // состояние для открытия/закрытия модалки
   const [isContactsOpen, setIsContactsOpen] = useState(false) // состояние для открытия/закрытия модалки контактов
-  const [isOpenTermsOfUse, setIsOpenTermsOfUse] = useState(false) // состояние для открытия/закрытия модалки контактов
+  const [isTermsOfUseOpen, setIsTermsOfUseOpen] = useState(false) // состояние для открытия/закрытия модалки контактов
 
   return (
     <>
@@ -29,7 +29,7 @@ function Footer() {
               Политика конфиденциальности
             </button>
             <button
-              onClick={() => setIsOpenTermsOfUse(true)}
+              onClick={() => setIsTermsOfUseOpen(true)}
               className="relative px-3 py-1 rounded-md text-white hover:text-blue-600 hover:bg-white transition-colors"
             >
               Условия использования
@@ -46,13 +46,13 @@ function Footer() {
 
       {/* Модалка контактов*/}
       <ContactsModal
-        isOpenContactsModal={isContactsOpen}
-        onCloseContactsModal={() => setIsContactsOpen(false)}
+        isOpen={isContactsOpen}
+        onClose={() => setIsContactsOpen(false)}
       />
       {/* Модалка условия использования*/}
       <TermsOfUseModal
-        isOpenTermsOfUseModal={isOpenTermsOfUse}
-        onCloseTermsOfUseModal={() => setIsOpenTermsOfUse(false)}
+        isOpen={isTermsOfUseOpen}
+        onClose={() => setIsTermsOfUseOpen(false)}
       />
     </>
   )
