@@ -28,7 +28,9 @@ function PrivacyPolicyModal({ isOpen, onClose }) {
           ✖
         </button>
 
-        <h2 className="text-xl font-bold mb-4">Политика конфиденциальности</h2>
+        <h1 className="text-2xl font-bold text-center mb-6 text-gray-800">
+          Политика конфиденциальности
+        </h1>
 
         {/* Текст */}
         <div className="max-h-60 overflow-y-auto text-gray-700 text-sm mb-4">
